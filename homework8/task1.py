@@ -23,15 +23,17 @@ def create(phonebook: dict(), id: int()):
 
 def find(phonebook: dict()):
     find_surname = input("Введите фамилию для поиска: ")
+    responce_idx = -1
     for idx in phonebook:
         if find_surname.lower() == phonebook[idx]['surname'].lower():
-            return idx
+            responce_idx = idx
+    return responce_idx
 
 def export(phonebook: dict()):
     filename = input("Введите имя файла: ")
     with open(filename, "w", encoding='utf-8') as file:
         for idx, data in phonebook.items():
-            file.write(f"{data['surname']}/{data['name']}/{data['number']}/{data['description']}\n")
+            file.write(f"{data['name']}/{data['surname']}/{data['number']}/{data['description']}\n")
 
 def import_phonebook(phonebook: dict(), idx: int()):
     filename = input("Введите имя файла: ")
@@ -51,9 +53,11 @@ def start():
             phonebook = create(phonebook, id)
             id += 1
         elif command == 'read':
-            print(phonebook[find(phonebook)])
+            idx = find(phonebook)
+            print(phonebook[idx]) if idx != -1 else print('Нет такой записи')
         elif command == 'update':
-            phonebook = create(phonebook, find(phonebook))
+            idx = find(phonebook)
+            phonebook = create(phonebook, idx) if idx != -1 else print('Нет такой записи')
         elif command == 'delete':
             idx = find(phonebook)
             del phonebook[idx]
